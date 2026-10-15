@@ -1,4 +1,4 @@
-# LAPORAN MINI PROJECT 3 PEMROGRAMAN BERORIENTASI OBJEK
+# LAPORAN MINI PROJECT 4 PEMROGRAMAN BERORIENTASI OBJEK
 
 ## SISTEM MANAJEMEN CV MANDIRI PRIMA KREATIF
 
@@ -24,7 +24,9 @@ Kelas : **Sistem Informasi A'25**
 - [BAB VI Dummy data pada arrayList](#bab-vi-dummy-data-pada-arraylist)
 - [BAB VII Polymorphism dan Abstraction](#bab-vii-polymorphism-dan-abstraction)
 - [BAB VIII Interface](#bab-viii-interface)
-- [BAB IX Kesimpulan](#bab-ix-kesimpulan)
+- [BAB IX JDBC (Java Database Connectivity)](#bab-ix-jdbc-java-database-connectivity)
+- [BAB X ORM (Object Relational Mapping)](#bab-x-orm-object-relational-mapping)
+- [BAB XI KESIMPULAN](#bab-xi-kesimpulan)
 
 ---
 
@@ -541,13 +543,96 @@ Dengan cara ini seluruh controller memiliki nama method yang seragam, dan contro
 
 ---
 
+## **BAB IX JDBC (Java Database Connectivity)**
 
-## **BAB IX KESIMPULAN**
+### **9.1 Membuat Database**
 
-Program Sistem Manajemen CV Mandiri Prima Kreatif merupakan aplikasi berbasis Java yang digunakan untuk mengelola data barang, pemasok, dan pengadaan. Pada pengembangannya, program menerapkan berbagai konsep Pemrograman Berorientasi Objek (PBO), seperti access modifier, encapsulation, inheritance, abstraction, polymorphism, serta penggunaan ArrayList untuk menyimpan data selama program berjalan.
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/8373d224-6961-4425-9f2d-f18c14ca097e" />
 
-Konsep abstraction diterapkan melalui **Barang** sebagai abstract class yang memiliki abstract method dan kemudian diimplementasikan oleh **BarangElektronik** dan **BarangNonElektronik**. Konsep inheritance diterapkan melalui hubungan antara superclass dan subclass tersebut, serta pada struktur **View** melalui **BaseView** dan **EntitasView**. Sementara itu, polymorphism diterapkan melalui overriding method pada subclass dan **View**, serta overloading pada beberapa method seperti pencarian barang dan pembacaan input. Program juga menerapkan keyword super untuk memanggil constructor superclass dan final untuk menjaga atribut maupun method tertentu agar tidak dapat diubah atau dioverride.
+----------
 
-Selain itu, program menggunakan pola Model-View-Controller (MVC) dengan memisahkan bagian model, view, dan controller, sehingga pengelolaan data, proses program, dan interaksi dengan pengguna menjadi lebih terorganisasi. Sebagai nilai tambah, program juga menggunakan interface Kelola sebagai kontrak yang diterapkan oleh controller untuk operasi pengelolaan data.
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/2cb25636-a566-4014-a554-17c7d3c58399" />
 
-Program dilengkapi dengan exception handling dan validasi input untuk menangani berbagai kesalahan, seperti input bukan angka, input kosong, ID yang tidak valid atau sudah digunakan, stok negatif, nomor telepon yang tidak sesuai, serta tanggal yang tidak valid. Dengan penerapan berbagai konsep tersebut, program menjadi lebih terstruktur, mudah dipahami, memiliki pembagian tanggung jawab yang jelas, mengurangi pengulangan kode, dan lebih mudah dikembangkan. Program ini menunjukkan penerapan konsep-konsep PBO yang telah dipelajari dalam bentuk aplikasi yang dapat digunakan untuk mengelola data secara terorganisasi.
+
+Sebelum program bisa terhubung ke database, database itu sendiri harus dibuat terlebih dulu. Dalam proyek ini, database bernama db_sistemmanajemencvmpk dibuat untuk menyimpan semua data sistem manajemen CVMPK. Setelah database terbentuk, data awal (dummy data) juga dimasukkan supaya saat fitur tampilkan data dijalankan, sudah ada isinya dan tidak perlu diketik ulang dari awal, agar lebih mudah memastikan apakah koneksi dan fitur baca data sudah berjalan dengan benar.
+
+### **9.2 Koneksi Database**
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/d6d47f42-ef15-4751-98e0-3cbbd8aa9b16" />
+
+
+Pada gambar di atas menunjukkan class Koneksi, yaitu class yang bertugas menghubungkan program dengan database db_sistemmanajemencvmpk. Class ini menyimpan alamat database, nama pengguna, dan password MySQL, lalu membuka koneksi ke database saat dibutuhkan. Koneksi tidak dibuat ulang setiap kali ada permintaan, tetapi disimpan dan dipakai kembali, sehingga program bekerja lebih efisien.
+
+
+-> Test Koneksi pada JDBC
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/fa0640d7-088b-4c8e-86d0-57f988d01eb8" />
+
+
+-> Test Koneksi pada ORM
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/cddf63b5-4cd3-446c-bbe7-2ae16d6b3df0" />
+
+Pada gambar di atas menunjukkan class TestKoneksi pada JDBC dan ORM, yaitu class untuk menguji apakah program sudah terhubung dengan database db_sistemmanajemencvmpk. Class ini memanggil Koneksi.getConnection() lalu mengecek hasilnya. Jika koneksi berhasil, program menampilkan pesan bahwa database siap digunakan. Jika gagal, program menampilkan pesan untuk memeriksa URL, username, password, dan apakah service MySQL sudah menyala.
+
+### **9.3 Import Depedency**
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/6cfe9a90-bbe1-4a35-a3db-e88eb8d1de28" />
+
+Pada gambar di atas menunjukkan penambahan dependency di file pom.xml. Dependency ini berisi driver mysql-connector-j, yaitu penerjemah yang membuat program Java bisa berkomunikasi dengan MySQL melalui JDBC, serta driver hibernate-core, yaitu penerjemah yang membuat program Java bisa berkomunikasi dengan MYSQL melalui ORM. Tanpa adanya dependency ini, program tidak tahu cara terhubung ke MySQL, sehingga koneksi akan gagal. 
+
+### **9.4 DAO dan Prepared Statement**
+
+-> Pemasok DAO
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/1724afe6-d8cf-4504-af09-dc4f7caf7a4e" />
+
+-> Pengadaan DAO
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/2eb014fd-966f-4875-baa2-4ff8de9ae016" />
+
+Pada gambar di atas menunjukkan class DAO (Data Access Object), yaitu tempat menyimpan kode yang khusus mengurus komunikasi dengan database. Di dalamnya terdapat perintah SQL untuk menambah, membaca, mengubah, dan menghapus data pemasok dan pengadaan. Dengan memisahkan perintah SQL ke dalam DAO, bagian lain dari program tidak perlu tahu cara kerja database, serta menunjukkan adanya penerapan PreparedStatement. Cara ini membuat perintah SQL ditulis dengan tanda “?” sebagai tempat nilai, lalu nilainya diisi terpisah menggunakan method seperti setString() atau setInt(). Dengan cara ini, input dari pengguna tidak dianggap sebagai bagian dari perintah SQL, sehingga program terhindar dari SQL Injection, yaitu serangan dengan menyisipkan kode SQL berbahaya lewat input.
+
+
+## **BAB X ORM (Object Relational Mapping)**
+
+### **10.1 Membuat folder resource**
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/16dcf150-6a91-4759-87a5-6157cd979619" />
+
+Pada gambar di atas menunjukkan pembuatan folder resources yang di dalamnya terdapat folder META-INF beserta file persistence.xml. Folder dan file ini berisi konfigurasi penting untuk ORM, yaitu persistence.xml sebagai file pengaturan utama yang mendefinisikan persistence unit serta parameter yang membuat program Java bisa terhubung dan mengelola database secara otomatis melalui framework Hibernate. Tanpa adanya struktur folder dan file konfigurasi ini, program tidak memiliki acuan parameter koneksi untuk ORM, sehingga proses inisialisasi manajemen data objek akan gagal.
+
+### **10.2 Import Dependency**
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/391979ae-4392-40ed-8287-339cffef5a4e" />
+
+Pada gambar di atas menunjukkan penambahan dependency di file pom.xml. Dependency ini berisi driver hibernate-core, yaitu penerjemah yang membuat program Java bisa berkomunikasi dengan MySQL melalui ORM. Tanpa dependency ini, program tidak tahu cara terhubung ke MySQL, sehingga koneksi akan gagal. 
+
+
+### **10.3 ORM dan Entity Manager Provider**
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/f8a22e36-1305-4301-bcb9-a94a845fe9ea" />
+
+Pada gambar di atas menunjukkan pembuatan kelas EntityManagerProvider yang berada di dalam package model.manager. Kelas ini berfungsi sebagai pengelola utama (entry point) untuk menginisialisasi EntityManagerFactory menggunakan Persistence.createEntityManagerFactory("cvmpkPU") berdasarkan konfigurasi pada file persistence.xml. Kelas ini memastikan proses pembuatan sesi pengelolaan basis data secara objek (object-relational mapping) dapat berjalan dengan aman melalui blok try-catch. Tanpa adanya kelas pengelola ini, program tidak memiliki titik acuan untuk menghasilkan EntityManager yang dibutuhkan dalam menjalankan operasi CRUD berbasis ORM Hibernate.
+
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/068873f9-c219-446e-8420-b95445c01941" />
+
+
+Pada gambar di atas menunjukkan pembuatan kelas BarangManager yang berada di dalam package model.manager. Kelas ini berfungsi untuk mengelola dan mengeksekusi operasi basis data secara objek (object-relational mapping) pada entitas barang, seperti method tambah(Barang barang) yang menangani proses penyimpanan data ke database menggunakan EntityManager dari Hibernate. Kelas ini memastikan proses transaksi basis data mulai dari membuka transaksi (begin), menyimpan objek (persist), melakukan commit, rollback jika terjadi kesalahan, hingga menutup sesi (close) dapat berjalan dengan aman dan terstruktur melalui blok try-catch-finally. Tanpa adanya kelas pengelola ini, program tidak memiliki komponen untuk menjalankan fungsi CRUD entitas barang secara otomatis menggunakan framework ORM.
+
+## **BAB XI KESIMPULAN**
+
+Program Sistem Manajemen CV Mandiri Prima Kreatif merupakan aplikasi berbasis Java yang digunakan untuk mengelola data barang, pemasok, dan pengadaan. Pada pengembangannya, program menerapkan berbagai konsep Pemrograman Berorientasi Objek (PBO), seperti access modifier, encapsulation, inheritance, abstraction, polymorphism, serta integrasi Database MySQL sebagai media penyimpanan data secara permanen (persistent).
+
+Konsep abstraction diterapkan melalui Barang sebagai abstract class yang memiliki abstract method dan kemudian diimplementasikan oleh BarangElektronik dan BarangNonElektronik. Konsep inheritance diterapkan melalui hubungan antara superclass dan subclass tersebut, serta pada struktur View melalui BaseView dan EntitasView. Sementara itu, polymorphism diterapkan melalui overriding method pada subclass dan View, serta overloading pada beberapa method seperti pencarian barang dan pembacaan input. Program juga menerapkan keyword super untuk memanggil constructor superclass dan final untuk menjaga atribut maupun method tertentu agar tidak dapat diubah atau di-override.
+
+Selain itu, program menggunakan pola Model-View-Controller (MVC) dengan memisahkan bagian model, view, dan controller, sehingga pengelolaan data, proses program, dan interaksi dengan pengguna menjadi lebih terorganisasi. Pada Mini Project 4 ini, sistem dikembangkan dengan arsitektur hibrida (hybrid architecture) dalam mengakses basis data:
+
+JDBC Prepared Statement & DAO (di package config) digunakan untuk mengelola entitas Pemasok dan Pengadaan secara aman dari ancaman SQL Injection.
+
+Framework ORM Hibernate / JPA (di package model.manager) diimplementasikan sebagai Nilai Tambah untuk mengelola entitas Barang secara otomatis berbasis objek.
+
+Data Awal (Dummy Data) disajikan secara langsung melalui skrip .sql yang diimpor ke basis data MySQL, sehingga saat fitur read dijalankan, data dapat langsung ditampilkan tanpa harus menginput dari awal melalui kode.
+
+Program dilengkapi dengan exception handling dan validasi input berlapis untuk menangani berbagai kesalahan, seperti input bukan angka, input kosong, ID yang tidak valid atau sudah digunakan, stok negatif, nomor telepon yang tidak sesuai, serta format tanggal yang tidak valid. Dengan penerapan berbagai konsep tersebut, program menjadi jauh lebih terstruktur, mudah dipahami, memiliki pembagian tanggung jawab yang jelas, mengurangi pengulangan kode, dan siap digunakan untuk mengelola data inventaris secara nyata.
