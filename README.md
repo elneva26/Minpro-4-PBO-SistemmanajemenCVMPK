@@ -128,11 +128,11 @@ Berisi class SistemmanajemenCVMPK yang merupakan titik awal (entry point) progra
 
 | Package | Class | Tugas |
 |---|---|---|
-| `config` | `EntityManagerProvider`, `Koneksi`, `TestKoneksi`, `TestKoneksiOrm` | Menyediakan konfigurasi koneksi ke database. `EntityManagerProvider` bertindak sebagai *entry point* ORM/JPA, `Koneksi` menangani koneksi JDBC tradisional[cite: 1], serta kelas uji (*test*) untuk memastikan koneksi database berhasil. |
+| `config` | `EntityManagerProvider`, `Koneksi`, `TestKoneksi`, `TestKoneksiOrm` | Menyediakan konfigurasi koneksi ke database. `EntityManagerProvider` bertindak sebagai *entry point* ORM/JPA, `Koneksi` menangani koneksi JDBC tradisional, serta kelas uji (*test*) untuk memastikan koneksi database berhasil. |
 | `model` | `Barang`, `BarangElektronik`, `BarangNonElektronik`, `Pemasok`, `Pengadaan`, `TanggalConverter` | Menyimpan data dan merepresentasikan objek entitas (termasuk penerapan pewarisan pada barang), menjaga aturan data, serta menyediakan utilitas konversi tanggal. Model **tidak** mencetak apa pun ke layar. |
 | `model.dao` | `PemasokDAO`, `PengadaanDAO` | Bertanggung jawab penuh terhadap akses data dan komunikasi langsung ke database untuk menjalankan operasi CRUD (*Create, Read, Update, Delete*). |
 | `view` | `BaseView`, `EntitasView`, `BarangView`, `PemasokView`, `PengadaanView`, `MenuView` | Menangani seluruh interaksi antarmuka pengguna (`Scanner` dan `System.out`): menampilkan menu, membaca input beserta validasinya, dan mencetak data. |
-| `controller` | `Kelola`, `MenuController`, `BarangController`, `PemasokController`, `PengadaanController`, `BarangManager` | Mengatur alur program dan logika bisnis (*service layer*). Meminta input ke View, memproses data, berinteraksi dengan DAO/Model, lalu menampilkan hasilnya. `Kelola` bertindak sebagai *interface* kontrak[cite: 5]. |
+| `controller` | `Kelola`, `MenuController`, `BarangController`, `PemasokController`, `PengadaanController`, `BarangManager` | Mengatur alur program dan logika bisnis (*service layer*). Meminta input ke View, memproses data, berinteraksi dengan DAO/Model, lalu menampilkan hasilnya. `Kelola` bertindak sebagai *interface* kontrak. |
 | `main` | `SistemmanajemenCVMPK` | Membuat objek `Scanner`, menginisialisasi `MenuController`, lalu menjalankannya sebagai titik awal (*entry point*) utama program. |
 
 ---
