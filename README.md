@@ -82,28 +82,42 @@ Program menerapkan struktur **MVC (Model-View-Controller)** dengan satu package 
 Dengan pembagian tersebut, program menerapkan pola Model-View-Controller (MVC), yaitu Model bertanggung jawab terhadap data dan aturan data, View menangani tampilan serta input pengguna, sedangkan Controller mengatur alur dan proses program. Package main berfungsi sebagai titik awal untuk menjalankan aplikasi. Pembagian ini membuat struktur program lebih terorganisasi, mudah dipahami, dan memudahkan pengembangan maupun pemeliharaan program.  
 
 
-<img width="500" alt="image" src="https://github.com/user-attachments/assets/8dcb6403-55bf-48a9-9dda-7081769e01b8" />
+<img width="500" alt="Screenshot 2026-10-15 144643" src="https://github.com/user-attachments/assets/9f473a08-bd5c-4380-9ad8-4f1d42c770f8" />
+
+-----------
+
+<img width="500" alt="Screenshot 2026-10-15 144659" src="https://github.com/user-attachments/assets/3dbf243b-4cbd-4ec4-9f7e-47887e2469b6" />
+
+
+-> Package Config
+
+Berisi class yang mengatur konfigurasi koneksi ke database. Class yang terdapat pada package ini adalah EntityManagerProvider, Koneksi, TestKoneksi, dan TestKoneksiOrm.
+
+EntityManagerProvider bertindak sebagai entry point utama untuk ORM (JPA/Hibernate), Koneksi menangani konfigurasi JDBC tradisional, serta TestKoneksi dan TestKoneksiOrm digunakan untuk menguji koneksi ke database.
 
 -> Package Model
 
-Berisi class yang merepresentasikan data atau objek yang digunakan dalam program. Class yang terdapat pada package ini adalah Barang, BarangElektronik, BarangNonElektronik, Pemasok, dan Pengadaan.
+Berisi class yang merepresentasikan data atau objek yang digunakan dalam program. Class yang terdapat pada package ini adalah Barang, BarangElektronik, BarangNonElektronik, Pemasok, Pengadaan, dan TanggalConverter.
 
+Class Barang berperan sebagai abstract class yang menjadi dasar bagi BarangElektronik dan BarangNonElektronik. Sementara itu, Pemasok dan Pengadaan digunakan untuk merepresentasikan data pemasok dan pengadaan, serta TanggalConverter untuk utilitas konversi tanggal.
 
-Class Barang berperan sebagai abstract class yang menjadi dasar bagi BarangElektronik dan BarangNonElektronik. Sementara itu, Pemasok dan Pengadaan digunakan untuk merepresentasikan data pemasok dan pengadaan.
+-> Package Model.Dao
+
+Berisi class yang bertanggung jawab terhadap akses data dan komunikasi langsung dengan database. Class yang terdapat pada package ini adalah PemasokDAO dan PengadaanDAO.
+
+Package ini menangani operasi CRUD (Create, Read, Update, Delete) untuk masing-masing entitas pada database secara terpisah dari logika program utama.
+
+-> Package Controller
+
+Berisi class yang bertanggung jawab untuk mengatur proses, alur pengelolaan data, serta logika bisnis (service layer). Class yang terdapat pada package ini adalah MenuController, BarangController, PemasokController, PengadaanController, BarangManager, dan Kelola.
+
+MenuController mengatur menu utama dan alur navigasi aplikasi. BarangController, PemasokController, dan PengadaanController menangani proses pengelolaan data. BarangManager bertindak sebagai manager/service untuk memproses logika program, sedangkan Kelola merupakan interface yang menjadi kontrak bagi controller dalam menjalankan operasi pengelolaan data.
 
 -> Package View
 
 Berisi class yang bertanggung jawab terhadap tampilan dan interaksi dengan pengguna. Class yang terdapat pada package ini adalah BaseView, EntitasView, BarangView, PemasokView, PengadaanView, dan MenuView.
 
-
 BaseView menyediakan fungsi umum seperti menampilkan judul, garis, pesan, serta membaca input pengguna. EntitasView menjadi kerangka umum untuk tampilan data. Selanjutnya, BarangView, PemasokView, dan PengadaanView menangani tampilan dan input yang lebih spesifik sesuai dengan masing-masing data. MenuView digunakan untuk menampilkan menu utama program.
-
--> Package Controller
-
-Berisi class yang bertanggung jawab untuk mengatur proses dan alur pengelolaan data. Class yang terdapat pada package ini adalah MenuController, BarangController, PemasokController, PengadaanController, dan Kelola.
-
-
-MenuController mengatur menu utama dan mengarahkan pengguna ke proses pengelolaan data yang dipilih. BarangController, PemasokController, dan PengadaanController menangani proses seperti menambahkan, menampilkan, menghapus, dan mengubah data. Sementara itu, Kelola merupakan interface yang menjadi kontrak bagi controller dalam menjalankan operasi pengelolaan data.
 
 -> Package Main
 
@@ -114,10 +128,12 @@ Berisi class SistemmanajemenCVMPK yang merupakan titik awal (entry point) progra
 
 | Package | Class | Tugas |
 |---|---|---|
-| `main` | `SistemmanajemenCVMPK` | Membuat `Scanner`, membuat `MenuController`, lalu menjalankannya. Tidak berisi logika lain. |
-| `model` | `Barang`, `BarangElektronik`, `BarangNonElektronik`, `Pemasok`, `Pengadaan` | Menyimpan data dan menjaga aturan datanya (misalnya stok tidak boleh minus). Model **tidak** mencetak apa pun ke layar. Jika data tidak valid, model melempar `IllegalArgumentException`. |
-| `view` | `BaseView`, `EntitasView`, `BarangView`, `PemasokView`, `PengadaanView`, `MenuView` | Seluruh `Scanner` dan `System.out` ada di sini: menampilkan menu, membaca input beserta validasinya, dan mencetak data. View tidak menyimpan data. |
-| `controller` | `Kelola`, `MenuController`, `BarangController`, `PemasokController`, `PengadaanController` | Mengatur alur: meminta input ke View, membuat atau mengubah objek Model, menyimpannya di `ArrayList`, lalu meminta View menampilkan hasilnya. |
+| `config` | `EntityManagerProvider`, `Koneksi`, `TestKoneksi`, `TestKoneksiOrm` | Menyediakan konfigurasi koneksi ke database. `EntityManagerProvider` bertindak sebagai *entry point* ORM/JPA, `Koneksi` menangani koneksi JDBC tradisional[cite: 1], serta kelas uji (*test*) untuk memastikan koneksi database berhasil. |
+| `model` | `Barang`, `BarangElektronik`, `BarangNonElektronik`, `Pemasok`, `Pengadaan`, `TanggalConverter` | Menyimpan data dan merepresentasikan objek entitas (termasuk penerapan pewarisan pada barang), menjaga aturan data, serta menyediakan utilitas konversi tanggal. Model **tidak** mencetak apa pun ke layar. |
+| `model.dao` | `PemasokDAO`, `PengadaanDAO` | Bertanggung jawab penuh terhadap akses data dan komunikasi langsung ke database untuk menjalankan operasi CRUD (*Create, Read, Update, Delete*). |
+| `view` | `BaseView`, `EntitasView`, `BarangView`, `PemasokView`, `PengadaanView`, `MenuView` | Menangani seluruh interaksi antarmuka pengguna (`Scanner` dan `System.out`): menampilkan menu, membaca input beserta validasinya, dan mencetak data. |
+| `controller` | `Kelola`, `MenuController`, `BarangController`, `PemasokController`, `PengadaanController`, `BarangManager` | Mengatur alur program dan logika bisnis (*service layer*). Meminta input ke View, memproses data, berinteraksi dengan DAO/Model, lalu menampilkan hasilnya. `Kelola` bertindak sebagai *interface* kontrak[cite: 5]. |
+| `main` | `SistemmanajemenCVMPK` | Membuat objek `Scanner`, menginisialisasi `MenuController`, lalu menjalankannya sebagai titik awal (*entry point*) utama program. |
 
 ---
 
